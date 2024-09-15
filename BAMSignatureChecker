@@ -67,7 +67,7 @@ Write-Host -ForegroundColor Blue "   ██║  ██║██║   ██║  
 Write-Host -ForegroundColor Blue "   ╚═╝  ╚═╝╚═╝   ╚═╝   ╚══════╝   ╚═╝       ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝";
 Write-Host "";
 Write-Host -ForegroundColor Red "   Made By: RitzySix";
-Write-Host -ForegroundColor Red "   Details: Your Mama";
+Write-Host -ForegroundColor Red "   Details: Signature Checker and EXE Finder";
 Write-Host -ForegroundColor Red "   discord.gg/x3BUaPk369"; -NoNewLine
 Write-Host "";                                                                                                           
 
