@@ -1,3 +1,24 @@
+function Is-OSFile {
+    param (
+        [string]$FilePath
+    )
+
+    # Common OS file paths or directories
+    $osPaths = @(
+        "C:\Windows\",
+        "C:\Windows\System32\",
+        "C:\Windows\SysWOW64\"
+    )
+
+    # Check if the file path starts with any of the OS paths
+    foreach ($osPath in $osPaths) {
+        if ($FilePath -like "$osPath*") {
+            return $true
+        }
+    }
+    return $false
+}
+
 $ErrorActionPreference = "SilentlyContinue"
 
 function Get-Signature {
@@ -38,21 +59,23 @@ Clear-Host
 
 Write-Host "";
 Write-Host "";
-Write-Host -ForegroundColor Red "   ██████╗ ███████╗██████╗     ██╗      ██████╗ ████████╗██╗   ██╗███████╗    ██████╗  █████╗ ███╗   ███╗";
-Write-Host -ForegroundColor Red "   ██╔══██╗██╔════╝██╔══██╗    ██║     ██╔═══██╗╚══██╔══╝██║   ██║██╔════╝    ██╔══██╗██╔══██╗████╗ ████║";
-Write-Host -ForegroundColor Red "   ██████╔╝█████╗  ██║  ██║    ██║     ██║   ██║   ██║   ██║   ██║███████╗    ██████╔╝███████║██╔████╔██║";
-Write-Host -ForegroundColor Red "   ██╔══██╗██╔══╝  ██║  ██║    ██║     ██║   ██║   ██║   ██║   ██║╚════██║    ██╔══██╗██╔══██║██║╚██╔╝██║";
-Write-Host -ForegroundColor Red "   ██║  ██║███████╗██████╔╝    ███████╗╚██████╔╝   ██║   ╚██████╔╝███████║    ██████╔╝██║  ██║██║ ╚═╝ ██║";
-Write-Host -ForegroundColor Red "   ╚═╝  ╚═╝╚══════╝╚═════╝     ╚══════╝ ╚═════╝    ╚═╝    ╚═════╝ ╚══════╝    ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝";
+Write-Host -ForegroundColor Blue "   ██████╗ ██╗████████╗███████╗██╗   ██╗    ██████╗  █████╗ ███╗   ███╗    ████████╗ ██████╗  ██████╗ ██╗     ";
+Write-Host -ForegroundColor Blue "   ██╔══██╗██║╚══██╔══╝╚══███╔╝╚██╗ ██╔╝    ██╔══██╗██╔══██╗████╗ ████║    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ";
+Write-Host -ForegroundColor Blue "   ██████╔╝██║   ██║     ███╔╝  ╚████╔╝     ██████╔╝███████║██╔████╔██║       ██║   ██║   ██║██║   ██║██║     ";
+Write-Host -ForegroundColor Blue "   ██╔══██╗██║   ██║    ███╔╝    ╚██╔╝      ██╔══██╗██╔══██║██║╚██╔╝██║       ██║   ██║   ██║██║   ██║██║     ";
+Write-Host -ForegroundColor Blue "   ██║  ██║██║   ██║   ███████╗   ██║       ██████╔╝██║  ██║██║ ╚═╝ ██║       ██║   ╚██████╔╝╚██████╔╝███████╗";
+Write-Host -ForegroundColor Blue "   ╚═╝  ╚═╝╚═╝   ╚═╝   ╚══════╝   ╚═╝       ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝";
 Write-Host "";
-Write-Host -ForegroundColor Blue "   Made By PureIntent (Shitty ScreenSharer) For Red Lotus ScreenSharing and DFIR - " -NoNewLine
-Write-Host -ForegroundColor Red "discord.gg/redlotus";
-Write-Host "";
+Write-Host -ForegroundColor Red "   Made By: RitzySix";
+Write-Host -ForegroundColor Red "   Details: Your Mama";
+Write-Host -ForegroundColor Red "   discord.gg/x3BUaPk369"; -NoNewLine
+Write-Host "";                                                                                                           
 
 function Test-Admin {;$currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent());$currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator);}
 if (!(Test-Admin)) {
     Write-Warning "Please Run This Script as Admin."
-    Start-Sleep 10
+    Start-Sleep 5
+    pause
     Exit
 }
 
@@ -78,7 +101,7 @@ $Bam = Foreach ($Sid in $Users){$u++
             
         foreach($rp in $rpath){
            $BamItems = Get-Item -Path "$($rp)UserSettings\$Sid" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Property
-           Write-Host -ForegroundColor Red "Extracting " -NoNewLine
+           Write-Host -ForegroundColor Red "   Extracting " -NoNewLine
            Write-Host -ForegroundColor Blue "$($rp)UserSettings\$SID"
            $bi = 0 
 
@@ -113,17 +136,17 @@ $Bam = Foreach ($Sid in $Users){$u++
 			    {Get-Signature -FilePath $path} else {$sig = ""}				
                 [PSCustomObject]@{
                             'Examiner Time' = $TimeLocal
-						    'Last Execution Time (UTC)'= $TimeUTC
 						    'Last Execution User Time' = $TimeUser
 						     Application = 	$f
 						     Path =  		$path
                              Signature =          $Sig
+                             'OS' = if ($path) { Is-OSFile -FilePath $path } else { $false }  # Check if the file is an OS file
 						     User =         $User
 						     SID =          $Sid
                              Regpath =        $rp
                              }}}}}
 
-$Bam | Out-GridView -PassThru -Title "BAM key entries $($Bam.count)  - User TimeZone: ($UserTime) -> ActiveBias: ( $Bias) - DayLightTime: ($Day)"
+$Bam | Out-GridView -PassThru -Title "BAM key entries $($Bam.count)  - User TimeZone: ($UserTime) -> Ritzy Bam Tool"
 
 $sw.stop()
 $t = $sw.Elapsed.TotalMinutes
